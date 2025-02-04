@@ -32,5 +32,4 @@
     <hr>
 
   </div> <!-- /container -->
-
 </main>

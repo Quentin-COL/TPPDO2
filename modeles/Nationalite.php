@@ -82,7 +82,7 @@ class Nationalite{
      * @return Nationalite
      */
     public static function findById(int $id) :Nationalite{
-        $req=MonPdo::getInstance()->preapare("select * from nationalite where num= :id");
+        $req=MonPdo::getInstance()->prepare("select * from nationalite where num= :id");
         $req->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE,'Nationalite');
         $req->bindParam(':id',$id);
         $req->execute();
@@ -99,8 +99,8 @@ class Nationalite{
         $req=MonPdo::getInstance()->preapare("insert into nationalite(libelle,numContinent) values(:libelle, :numContinent)");
         $req->bindParam(':libelle',$nationalite->getLibelle());
         $req->bindParam(':numContinent',$nationalite->numContinent);
-        $req->execute();
-        return $req;
+        $nb = $req->execute();
+        return $nb;
     }
     /**
      * modif une nationalite
@@ -113,8 +113,8 @@ class Nationalite{
         $req->bindParam(':id',$nationalite->getNum());
         $req->bindParam(':libelle',$nationalite->getLibelle());
         $req->bindParam(':numContinent',$nationalite->numContinent);
-        $req->execute();
-        return $req;
+        $nb = $req->execute();
+        return $nb;
     }
     /**
      * supprime une nationalite
@@ -123,10 +123,11 @@ class Nationalite{
      * @return integer
      */
     public static function delete(Nationalite $nationalite) :int{
-        $req=MonPdo::getInstance()->preapare("delete from nationalite where num= :id");
-        $req->bindParam(':id',$nationalite->getNum());
-        $req->execute();
-        return $req;
+        $req=MonPdo::getInstance()->prepare("delete from nationalite where num= :id");
+        $num= $nationalite->getNum();
+        $req->bindParam(':id',$num);  
+        $nb=$req->execute();
+        return $nb;
     }
 
 

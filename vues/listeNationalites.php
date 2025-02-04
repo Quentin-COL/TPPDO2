@@ -17,11 +17,11 @@
     <?php
     foreach($lesNationalites as $nationalite){
         echo "<tr class='d-flex'>";
-        echo "<td class='col-md-2'>".$nationalite->getNum()."</td>";
-        echo "<td class='col-md-8'>".$nationalite->getLibelle()."</td>";
+        echo "<td class='col-md-2'>".$nationalite->num."</td>";
+        echo "<td class='col-md-8'>".$nationalite->libNation."</td>";
         echo "<td class='col-md-2'>
-          <a href='index.php?uc=nationalites&action=update&num=".$nationalite->getNum()."' class='btn btn-primary'><i class='lni lni-pencil-1'></i></a>
-          <a href='#modalsup' data-toggle='modal' data-suppression='index.php?uc=nationalites&action=delete&num=".$nationalite->getNum()."' class='btn btn-danger'><i class='lni lni-trash-3'></i></a>
+          <a href='index.php?uc=nationalites&action=update&num=".$nationalite->num."' class='btn btn-primary'><i class='lni lni-pencil-1'></i></a>
+          <a href='#modalsup' data-toggle='modal' data-suppression='index.php?uc=nationalites&action=delete&num=".$nationalite->num."' class='btn btn-danger'><i class='lni lni-trash-3'></i></a>
         </td>";
         echo "</tr>";
 
