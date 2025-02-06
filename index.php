@@ -1,10 +1,7 @@
-<?php ob_start();
-session_start(); 
+<?php ob_start();session_start(); 
 include "vues/header.php" ;
 include "vues/messageFlash.php";
-
 include "modeles/monPdo.php";
-
 include "modeles/Continent.php";
 include "modeles/Nationalite.php";
 

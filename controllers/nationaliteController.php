@@ -2,21 +2,31 @@
 $action=$_GET['action'];
 switch($action){
     case 'list':
-        $lesNationalites=Nationalite::findAll();
-        include('vues/listeNationalites.php');
+        $libelle ="";
+        $continentSel="Tous";
+        if(!empty($_POST['continent']) || !empty($_POST['libelle']))
+        {
+            $libelle = $_POST['libelle'];
+            $continentSel = $_POST['continent'];
+        }
+        $lesContinents = Continent::findAll();
+        $lesNationalites=Nationalite::findAll($libelle, $continentSel);
+        include('vues/nationalite/listeNationalites.php');
         break;
     case 'add':
         $mode="Ajouter";
-        include('vues/formNationalite.php');
+        $lesContinents=Continent::findAll();
+        include('vues/nationalite/formNationalite.php');
         break;
     case 'update':
         $mode="Modifier";
-        $nationalite=Nationalite::findById($_GET['num']);
-        include('vues/formNationalite.php');
+        $lesContinents=Continent::findAll();
+        $laNationalite=Nationalite::findById($_GET['num']);
+        include('vues/nationalite/formNationalite.php');
         break;
     case 'delete':
-        $nationalite=Nationalite::findById($_GET['num']);
-        $nb=Nationalite::delete($nationalite);
+        $laNationalite=Nationalite::findById($_GET['num']);
+        $nb=Nationalite::delete($laNationalite);
         if($nb==1){
             $_SESSION['message']=["success"=>"La nationalite a bien été supprimé"];
         }else{
@@ -24,15 +34,15 @@ switch($action){
         }
         header('location: index.php?uc=nationalites&action=list');
         break;
-    case 'valideForm':
+    case 'ValiderForm':
         $nationalite= new Nationalite();
+        $continent = Continent::findById($_POST['continent']);
+        $nationalite->setLibelle($_POST['libelle']);
+        $nationalite->setContinent($continent);
         if(empty($_POST['num'])){
-            $nationalite->setLibelle($_POST['libelle']);
             $nb=Nationalite::add($nationalite);
             $message = "ajoutée";  
         }else{
-            $nationalite->setLibelle($_POST['libelle']);
-            $nationalite->setNum($_POST['num']);
             $nb=Nationalite::update($nationalite);
             $message = "modifiée";  
         }

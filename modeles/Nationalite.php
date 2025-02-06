@@ -44,7 +44,7 @@ class Nationalite{
      *
      * @return Continent
      */
-    public function getNumContinent() :  Continent
+    public function getContinent() :  Continent
     {
         return Continent::findById($this->numContinent);
     }
@@ -55,7 +55,7 @@ class Nationalite{
      * @param Continent $continent
      * @return self
      */
-    public function setNumContinent(Continent $continent) : self
+    public function setContinent(Continent $continent) : self
     {
         $this->numContinent = $continent->getNum();
 
@@ -67,12 +67,27 @@ class Nationalite{
      *
      * @return Nationalite[] tableau de nationalite 
      */
-    public static function findAll():array
+    public static function findAll(?string $libelle="",?string $continent="Tous"):array
     {
-        $req=MonPdo::getInstance()->prepare("select n.num, n.libelle as 'libNation',c.libelle as 'libContinent' from nationalite n, continent c where n.numContinent=c.num");
+        $texteReq = "select n.num as numero, n.libelle as 'libNation', c.libelle as 'libContinent' from nationalite n, continent c where n.numContinent = c.num";
+        if ($libelle != "") {
+            $texteReq .= " and n.libelle Like :libelle";
+        }
+        if ($continent != "Tous") {
+            $texteReq .= " and c.num = :continent";
+        }
+        $texteReq .= " order by n.libelle";
+        $req = MonPdo::getInstance()->prepare($texteReq);
+        if ($libelle != "") {
+            $libelle = "%$libelle%";
+            $req->bindParam(':libelle', $libelle);
+        }
+        if ($continent != "Tous") {
+            $req->bindParam(':continent', $continent);
+        }
         $req->setFetchMode(PDO::FETCH_OBJ);
         $req->execute();
-        $lesResultats=$req->fetchAll();
+        $lesResultats = $req->fetchAll();
         return $lesResultats;
     }
     /**
@@ -96,9 +111,11 @@ class Nationalite{
      * @return integer
      */
     public static function add(Nationalite $nationalite) :int{ 
-        $req=MonPdo::getInstance()->preapare("insert into nationalite(libelle,numContinent) values(:libelle, :numContinent)");
-        $req->bindParam(':libelle',$nationalite->getLibelle());
-        $req->bindParam(':numContinent',$nationalite->numContinent);
+        $req=MonPdo::getInstance()->prepare("insert into nationalite(libelle,numContinent) values(:libelle, :numContinent)");
+        $libelle = $nationalite->getLibelle();
+        $numContinent = $nationalite->numContinent;
+        $req->bindParam(':libelle', $libelle);
+        $req->bindParam(':numContinent', $numContinent);
         $nb = $req->execute();
         return $nb;
     }
